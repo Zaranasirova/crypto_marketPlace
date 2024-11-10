@@ -20,12 +20,14 @@ export interface GlobalState {
   cryptoData: CryptoItem[];
   selectedValue: string;
   currencySymbol: { name: string; symbol: string };
+  searchValue:string
 }
 
 const initialState: GlobalState = {
   cryptoData: [],
   selectedValue: "USD",
   currencySymbol: { name: "USD", symbol: "$" },
+  searchValue:""
 };
 
 const getCurrencySymbol = (currency: string) => {
@@ -79,6 +81,12 @@ export const counterSlice = createSlice({
       state.selectedValue = action.payload;
       state.currencySymbol = getCurrencySymbol(action.payload);
     },
+    setSearchValue(state,action: PayloadAction<string>){
+      state.searchValue=action.payload;
+    },
+    setFilteredCryptoData(state,action:PayloadAction<CryptoItem[]>){
+      state.cryptoData=action.payload;
+    }
   },
   extraReducers(builder) {
     builder.addCase(getAllCryptoData.fulfilled, (state, action) => {
@@ -87,5 +95,5 @@ export const counterSlice = createSlice({
   },
 });
 
-export const { changeCurrency } = counterSlice.actions;
+export const { changeCurrency, setSearchValue,setFilteredCryptoData} = counterSlice.actions;
 export default counterSlice.reducer;
