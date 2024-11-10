@@ -60,7 +60,12 @@ const getCurrencySymbol = (currency: string) => {
 export const getAllCryptoData = createAsyncThunk(
   "cryptoData",
 async(currencySymbol:string)=>{
-  const res= await axios.get(`https://api.coingecko.com/api/v3/coins/markets?vs_currency=${currencySymbol}`);
+  const options = {
+    method: 'GET',
+    headers: {accept: 'application/json', 'x-cg-demo-api-key': 'CG-ZbRsxMJUHZ8aMJXtTxPTNTa8'}
+  };
+  
+  const res= await axios.get(`https://api.coingecko.com/api/v3/coins/markets?vs_currency=${currencySymbol}`,options);
   console.log(res)
   return res.data;
 }

@@ -37,7 +37,7 @@ const Home = () => {
             <li style={{textAlign:"right"}}>Market Cap</li>
           </ul>
           {
-            cryptoData.map(item=>(
+            cryptoData.slice(0,30).map(item=>(
               <ul key={item.id}>
                 <li>{item.market_cap_rank}</li>
                 <li style={{display:"flex",alignItems:"center", gap:"10px"}}><img src={item.image} alt={item.name}/><p>{item.name + "-" + item.symbol}</p></li>

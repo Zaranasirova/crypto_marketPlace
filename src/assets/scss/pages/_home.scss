@@ -55,6 +55,7 @@
       rgba(105, 2, 153, 0.15)
     );
     border-radius: 15px;
+    margin-bottom: 50px;
     .coinst-table-layout {
       ul {
         display: grid;
@@ -62,12 +63,16 @@
         padding: 15px 20px;
         align-items: center;
         border-bottom: 1px solid #3c3c3c;
+        &:last-child{
+              border: none;
+        }
         li{
             color: #ddd;
             text-align: start;
             img{
               width: 30px;
             }
+           
         }
       }
     }
