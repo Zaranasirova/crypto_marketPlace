@@ -1,0 +1,75 @@
+.hero-section {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  width: 100%;
+  text-align: center;
+  .head {
+    max-width: 900px;
+    margin: 70px auto;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    .hero-head-title {
+      font-size: 50px;
+    }
+    .text-wrapper {
+      color: #ddd;
+      font-size: 15px;
+    }
+    .hero-form {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #fff;
+      padding: 8px;
+      width: 88%;
+      margin: 0 auto;
+      font-size: 20px;
+      gap: 5px;
+      border-radius: 5px;
+      input {
+        flex: 1;
+        font-size: 16px;
+        padding-left: 10px;
+        border: none;
+        outline: none;
+      }
+      button {
+        border: none;
+        background-color: #7927ff;
+        color: #fff;
+        font-size: 16px;
+        padding: 10px 30px;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+    }
+  }
+  .main-content {
+    width: 55%;
+    margin: 0px auto;
+    background-image: linear-gradient(
+      rgba(84, 3, 255, 0.15),
+      rgba(105, 2, 153, 0.15)
+    );
+    border-radius: 15px;
+    .coinst-table-layout {
+      ul {
+        display: grid;
+        grid-template-columns: 0.5fr 2fr 1fr 1fr 1.5fr;
+        padding: 15px 20px;
+        align-items: center;
+        border-bottom: 1px solid #3c3c3c;
+        li{
+            color: #ddd;
+            text-align: start;
+            img{
+              width: 30px;
+            }
+        }
+      }
+    }
+  }
+}
