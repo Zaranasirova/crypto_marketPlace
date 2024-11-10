@@ -19,36 +19,51 @@ export interface CryptoItem {
 export interface GlobalState {
   cryptoData: CryptoItem[];
   selectedValue: string;
-  currencySymbol: string;
+  currencySymbol: { name: string; symbol: string };
 }
 
 const initialState: GlobalState = {
   cryptoData: [],
   selectedValue: "USD",
-  currencySymbol: "$",
+  currencySymbol: { name: "USD", symbol: "$" },
 };
 
 const getCurrencySymbol = (currency: string) => {
   switch (currency) {
     case "USD":
-      return "$";
+      return {
+        name:"USD",
+        symbol:"$"
+      }
     case "EUR":
-      return "€";
+      return {
+        name:"EUR",
+        symbol:"€"
+      };
     case "TRY":
-      return "₺";
+      return {
+        name:"TRY",
+        symbol:"₺"
+      };
     case "INR":
-      return "₹";
+      return {
+        name:"INR",
+        symbol:"₹"
+      };
     default:
-      return "$";
+      return {
+        name:"Usd",
+        symbol:"$"
+      }
   }
 };
 export const getAllCryptoData = createAsyncThunk(
   "cryptoData",
-  const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
-const apiUrl = 'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd';
-
-    return res.data;
-  }
+async(currencySymbol:string)=>{
+  const res= await axios.get(`https://api.coingecko.com/api/v3/coins/markets?vs_currency=${currencySymbol}`);
+  console.log(res)
+  return res.data;
+}
 );
 
 export const counterSlice = createSlice({

@@ -11,9 +11,9 @@ const Header = () => {
   const { selectedValue} = useSelector(
     (state: RootState) => state.global
   );
-  const dispatch = useDispatch(); // `dispatch`-i düzəldək
+  const dispatch = useDispatch(); 
   const handleSelectChange = (e: ChangeEvent<HTMLSelectElement>) => {
-    dispatch(changeCurrency(e.target.value)); // doğru olaraq `dispatch` funksiyasını istifadə et
+    dispatch(changeCurrency(e.target.value)); 
   };
   return (
     <header className="header">

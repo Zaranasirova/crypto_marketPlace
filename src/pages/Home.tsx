@@ -5,12 +5,12 @@ import { AppDispatch, RootState } from "../redux/store";
 
 const Home = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { cryptoData, currencySymbol } = useSelector(
+  const { cryptoData, currencySymbol,selectedValue } = useSelector(
     (state: RootState) => state.global
   );
   useEffect(()=>{
-    dispatch(getAllCryptoData(currencySymbol))
-  },[dispatch, currencySymbol]);
+    dispatch(getAllCryptoData(selectedValue))
+  },[dispatch,selectedValue]);
     return (
     <section className="hero-section">
       <div className="head">
@@ -41,9 +41,9 @@ const Home = () => {
               <ul key={item.id}>
                 <li>{item.market_cap_rank}</li>
                 <li style={{display:"flex",alignItems:"center", gap:"10px"}}><img src={item.image} alt={item.name}/><p>{item.name + "-" + item.symbol}</p></li>
-                <li>{currencySymbol}{item.current_price.toLocaleString()}</li>
+                <li>{currencySymbol.symbol}{item.current_price.toLocaleString()}</li>
                 <li style={{textAlign:"center"}}>{Math.floor(item.market_cap_change_24h*100)/100}</li>
-                <li style={{textAlign:"end"}}>{currencySymbol}{item.market_cap.toLocaleString()}</li>
+                <li style={{textAlign:"end"}}>{currencySymbol.symbol}{item.market_cap.toLocaleString()}</li>
               </ul>
             ))
           }
