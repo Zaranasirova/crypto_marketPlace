@@ -3,6 +3,7 @@ import Header from "./components/Header";
 import Home from "./pages/Home";
 import { Route, Routes } from "react-router-dom";
 import Footer from "./components/Footer";
+import CoinDetails from "./pages/CoinDetails";
 
 const App = () => {
   return (
@@ -11,6 +12,7 @@ const App = () => {
       <main>
         <Routes>
           <Route path={"/"} element={<Home />} />
+          <Route path={"/coin/:coinId"} element={<CoinDetails />} />
         </Routes>
       </main>
       <Footer/>
