@@ -1,7 +1,8 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getAllCryptoData,
+  setDisplayCoinData,
   setFilteredCryptoData,
   setSearchValue,
 } from "../redux/GlobalSlice";
@@ -10,25 +11,37 @@ import { Link } from "react-router-dom";
 
 const Home = () => {
   const { searchValue } = useSelector((state: RootState) => state.global);
-
   const dispatch = useDispatch<AppDispatch>();
-  const { cryptoData, currencySymbol, selectedValue } = useSelector(
-    (state: RootState) => state.global
-  );
+  const { displayCoinData, currencySymbol, selectedValue, cryptoData } =
+    useSelector((state: RootState) => state.global);
   const handleSearchValue = (event: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch(setSearchValue(event.target.value));
+    const value = event.target.value;
+    dispatch(setSearchValue(value));
+    if (value.trim() === "") {
+      dispatch(setDisplayCoinData(cryptoData));
+    }
   };
-  const handleSearchSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSearchSubmit = async (
+    event: React.FormEvent<HTMLFormElement>
+  ) => {
     event.preventDefault();
-    const filteredData = cryptoData.filter((item) =>
+
+    const filteredData = await displayCoinData.filter((item) =>
       item.name.toLowerCase().includes(searchValue.toLowerCase())
     );
-    dispatch(setFilteredCryptoData(filteredData));
+    dispatch(setDisplayCoinData(filteredData));
   };
 
   useEffect(() => {
     dispatch(getAllCryptoData(selectedValue));
   }, [dispatch, selectedValue]);
+
+  useEffect(() => {
+    const filteredData = cryptoData.filter((item) =>
+      item.name.toLowerCase().includes(searchValue.toLowerCase())
+    );
+    dispatch(setDisplayCoinData(filteredData));
+  }, [cryptoData, searchValue, dispatch]);
   return (
     <section className="hero-section">
       <div className="head">
@@ -42,11 +55,20 @@ const Home = () => {
         </div>
         <form className="hero-form" onSubmit={handleSearchSubmit}>
           <input
+            list="coinlist"
             type="text"
             placeholder="Search crypto.."
             value={searchValue}
             onChange={handleSearchValue}
+            required
           />
+
+          <datalist id="coinlist">
+            {cryptoData.map((item) => (
+              <option key={item.id} value={item.name} className="option"/>
+            ))}
+          </datalist>
+
           <button type="submit">Search</button>
         </form>
       </div>
@@ -59,7 +81,7 @@ const Home = () => {
             <li style={{ textAlign: "center" }}>24H Change</li>
             <li style={{ textAlign: "right" }}>Market Cap</li>
           </ul>
-          {cryptoData.slice(0, 30).map((item) => (
+          {displayCoinData.slice(0, 30).map((item) => (
             <Link to={`/coin/${item.id}`} key={item.id}>
               <ul>
                 <li>{item.market_cap_rank}</li>
@@ -73,8 +95,12 @@ const Home = () => {
                   {currencySymbol.symbol}
                   {item.current_price.toLocaleString()}
                 </li>
-                <li style={{ textAlign: "center" }}>
-                  {Math.floor(item.market_cap_change_24h * 100) / 100}
+                <li
+                  className={
+                    item.price_change_percentage_24h > 0 ? "green" : "red"
+                  }
+                >
+                  {Math.floor(item.price_change_percentage_24h * 100) / 100}
                 </li>
                 <li style={{ textAlign: "end" }}>
                   {currencySymbol.symbol}

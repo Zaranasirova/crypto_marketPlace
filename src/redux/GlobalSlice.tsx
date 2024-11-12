@@ -11,7 +11,7 @@ export interface CryptoItem {
   atl: number;
   high_24h: number;
   symbol: string;
-  market_cap_change_24h: number;
+  price_change_percentage_24h: number;
   market_cap_rank: number;
 }
 
@@ -21,6 +21,8 @@ export interface GlobalState {
   currencySymbol: { name: string; symbol: string };
   searchValue: string;
   singleData: CryptoItem | null;
+  filteredCryptoData:CryptoItem | null;
+  displayCoinData: CryptoItem[];
 }
 
 const initialState: GlobalState = {
@@ -28,7 +30,9 @@ const initialState: GlobalState = {
   selectedValue: "USD",
   currencySymbol: { name: "USD", symbol: "$" },
   searchValue: "",
-  singleData:null
+  singleData:null,
+  filteredCryptoData:null,
+  displayCoinData:[]
 };
 
 const getCurrencySymbol = (currency: string) => {
@@ -96,15 +100,20 @@ export const counterSlice = createSlice({
     },
     setSingleData(state,action:PayloadAction<CryptoItem|null>){
       state.singleData=action.payload
+    },
+    setDisplayCoinData(state,action:PayloadAction<CryptoItem[]>){
+      state.displayCoinData=action.payload
     }
+    
   },
   extraReducers(builder) {
     builder.addCase(getAllCryptoData.fulfilled, (state, action) => {
       state.cryptoData = action.payload;
+      state.displayCoinData = action.payload;
     });
   },
 });
 
-export const { changeCurrency, setSearchValue, setFilteredCryptoData,setSingleData } =
+export const { changeCurrency, setSearchValue, setFilteredCryptoData,setSingleData,setDisplayCoinData } =
   counterSlice.actions;
 export default counterSlice.reducer;
