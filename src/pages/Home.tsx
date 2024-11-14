@@ -3,16 +3,16 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   getAllCryptoData,
   setDisplayCoinData,
-  setFilteredCryptoData,
   setSearchValue,
 } from "../redux/GlobalSlice";
 import { AppDispatch, RootState } from "../redux/store";
 import { Link } from "react-router-dom";
 
 const Home = () => {
-  const { searchValue } = useSelector((state: RootState) => state.global);
+ 
   const dispatch = useDispatch<AppDispatch>();
-  const { displayCoinData, currencySymbol, selectedValue, cryptoData } =
+
+  const { displayCoinData, currencySymbol, selectedValue, cryptoData, searchValue} =
     useSelector((state: RootState) => state.global);
   const handleSearchValue = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;

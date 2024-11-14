@@ -14,15 +14,35 @@ export interface CryptoItem {
   price_change_percentage_24h: number;
   market_cap_rank: number;
 }
+export interface CryptoSingleItem {
+  id: string;
+  name: string;
+  symbol: string;
+  image: {
+    thumb: string;
+    small: string;
+    large: string;
+  };
+  market_data: {
+    current_price: { [key: string]: number };
+    market_cap: { [key: string]: number };
+    high_24h: { [key: string]: number };
+    low_24h: { [key: string]: number };
+    price_change_percentage_24h: number;
+    market_cap_rank: number;
+  };
+}
+
+
 
 export interface GlobalState {
-  cryptoData: CryptoItem[];
-  selectedValue: string;
-  currencySymbol: { name: string; symbol: string };
-  searchValue: string;
-  singleData: CryptoItem | null;
-  filteredCryptoData:CryptoItem | null;
-  displayCoinData: CryptoItem[];
+  cryptoData: CryptoItem[]; //umumi data statei
+  selectedValue: string; //value deyeri saxlayan state
+  currencySymbol: { name: string; symbol: string }; //seçili olan deyerin simvolunu və nameni saxlayan state
+  searchValue: string; //search inputa daxil edilən dəyəri saxlayan state
+  filteredCryptoData: CryptoItem | null; //search inputa daxil edilən dəyər ilə filter olunmuş datanı saxlayan stateş
+  displayCoinData: CryptoItem[]; //filterolunmuş datani və umumi datani saxlamaq ucun olan arrayi saxlayan state
+  singleData: CryptoSingleItem | null;
 }
 
 const initialState: GlobalState = {
@@ -30,9 +50,9 @@ const initialState: GlobalState = {
   selectedValue: "USD",
   currencySymbol: { name: "USD", symbol: "$" },
   searchValue: "",
-  singleData:null,
-  filteredCryptoData:null,
-  displayCoinData:[]
+  filteredCryptoData: null,
+  displayCoinData: [],
+  singleData: null,
 };
 
 const getCurrencySymbol = (currency: string) => {
@@ -83,8 +103,26 @@ export const getAllCryptoData = createAsyncThunk(
     return res.data;
   }
 );
+export const getSingleData = createAsyncThunk(
+  "SingleData",
+  async (currencySymbol: string) => {
+    const options = {
+      method: "GET",
+      headers: {
+        accept: "application/json",
+        "x-cg-demo-api-key": "	CG-ZbRsxMJUHZ8aMJXtTxPTNTa8",
+      },
+    };
 
-export const counterSlice = createSlice({
+    const response = (
+      await axios.get(`https://api.coingecko.com/api/v3/coins/${currencySymbol}`, options)
+    ).data;
+    return response;
+  }
+);
+
+
+export const globalSlice = createSlice({
   name: "global",
   initialState,
   reducers: {
@@ -98,22 +136,29 @@ export const counterSlice = createSlice({
     setFilteredCryptoData(state, action: PayloadAction<CryptoItem[]>) {
       state.cryptoData = action.payload;
     },
-    setSingleData(state,action:PayloadAction<CryptoItem|null>){
-      state.singleData=action.payload
+    setDisplayCoinData(state, action: PayloadAction<CryptoItem[]>) {
+      state.displayCoinData = action.payload;
     },
-    setDisplayCoinData(state,action:PayloadAction<CryptoItem[]>){
-      state.displayCoinData=action.payload
-    }
-    
+    setSingleData(state, action: PayloadAction<CryptoSingleItem>) {
+      state.singleData = action.payload;
+    },
   },
   extraReducers(builder) {
     builder.addCase(getAllCryptoData.fulfilled, (state, action) => {
       state.cryptoData = action.payload;
       state.displayCoinData = action.payload;
     });
+    builder.addCase(getSingleData.fulfilled, (state, action) => {
+      state.singleData = action.payload;
+    });
   },
 });
 
-export const { changeCurrency, setSearchValue, setFilteredCryptoData,setSingleData,setDisplayCoinData } =
-  counterSlice.actions;
-export default counterSlice.reducer;
+export const {
+  changeCurrency,
+  setSearchValue,
+  setFilteredCryptoData,
+  setDisplayCoinData,
+  setSingleData
+} = globalSlice.actions;
+export default globalSlice.reducer;
