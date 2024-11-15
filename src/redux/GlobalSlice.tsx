@@ -32,8 +32,9 @@ export interface CryptoSingleItem {
     market_cap_rank: number;
   };
 }
-
-
+export interface CryptoHistoricalData {
+  prices: [number, number][];
+}
 
 export interface GlobalState {
   cryptoData: CryptoItem[]; //umumi data statei
@@ -43,6 +44,8 @@ export interface GlobalState {
   filteredCryptoData: CryptoItem | null; //search inputa daxil edilən dəyər ilə filter olunmuş datanı saxlayan stateş
   displayCoinData: CryptoItem[]; //filterolunmuş datani və umumi datani saxlamaq ucun olan arrayi saxlayan state
   singleData: CryptoSingleItem | null;
+  loading: boolean;
+  historialData: CryptoHistoricalData | null;
 }
 
 const initialState: GlobalState = {
@@ -53,6 +56,8 @@ const initialState: GlobalState = {
   filteredCryptoData: null,
   displayCoinData: [],
   singleData: null,
+  loading: false,
+  historialData: null,
 };
 
 const getCurrencySymbol = (currency: string) => {
@@ -115,12 +120,37 @@ export const getSingleData = createAsyncThunk(
     };
 
     const response = (
-      await axios.get(`https://api.coingecko.com/api/v3/coins/${currencySymbol}`, options)
+      await axios.get(
+        `https://api.coingecko.com/api/v3/coins/${currencySymbol}`,
+        options
+      )
     ).data;
     return response;
   }
 );
-
+export const getAllHistoricalData = createAsyncThunk(
+  "historicialData",
+  async ({
+    coinId,
+    currencySymbol,
+  }: {
+    coinId: string;
+    currencySymbol: string;
+  }) => {
+    const options = {
+      method: "GET",
+      headers: {
+        accept: "application/json",
+        "x-cg-demo-api-key": "	CG-ZbRsxMJUHZ8aMJXtTxPTNTa8",
+      },
+    };
+    const historicialDataResponse = await axios.get(
+      `https://api.coingecko.com/api/v3/coins/${coinId}/market_chart?vs_currency=${currencySymbol}&days=10&interval=daily`,
+      options
+    );
+    return historicialDataResponse.data;
+  }
+);
 
 export const globalSlice = createSlice({
   name: "global",
@@ -143,13 +173,27 @@ export const globalSlice = createSlice({
       state.singleData = action.payload;
     },
   },
-  extraReducers(builder) {
+  extraReducers: (builder) => {
     builder.addCase(getAllCryptoData.fulfilled, (state, action) => {
       state.cryptoData = action.payload;
       state.displayCoinData = action.payload;
     });
+
     builder.addCase(getSingleData.fulfilled, (state, action) => {
       state.singleData = action.payload;
+      state.loading = false;
+    });
+
+    builder.addCase(getAllHistoricalData.fulfilled, (state, action) => {
+      state.historialData = action.payload;
+    });
+
+    builder.addCase(getSingleData.pending, (state) => {
+      state.loading = true;
+    });
+
+    builder.addCase(getSingleData.rejected, (state) => {
+      state.loading = false;
     });
   },
 });
@@ -159,6 +203,6 @@ export const {
   setSearchValue,
   setFilteredCryptoData,
   setDisplayCoinData,
-  setSingleData
+  setSingleData,
 } = globalSlice.actions;
 export default globalSlice.reducer;
