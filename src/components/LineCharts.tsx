@@ -6,7 +6,6 @@ import { RootState } from "../redux/store";
 const LineCharts = () => {
   const { historicalData } = useSelector((state: RootState) => state.global);
 
-  // İlkin tip strukturu: ilk element [string, string], digərləri [string, number]
   const [chartLineData, setChartLineData] = useState<
     Array<[string, string] | [string, number]>
   >([]);
@@ -16,10 +15,8 @@ const LineCharts = () => {
       ["Date", "Price"],
     ];
 
-    // historicalData varsa və prices mövcuddursa
     if (historicalData?.prices) {
       historicalData.prices.forEach((item) => {
-        // item[0] tarixdir, item[1] qiymətdir
         const date = new Date(item[0]);
         lineChartDataCopy.push([
           date.toLocaleDateString().slice(0, -5),
@@ -27,14 +24,12 @@ const LineCharts = () => {
         ]);
       });
 
-      // state-i yeniləyirik
       setChartLineData(lineChartDataCopy);
     }
   }, [historicalData]);
 
   return (
     <div>
-      {/* Chart komponentinə chartLineData əlavə edirik */}
       <Chart
         chartType="LineChart"
         data={chartLineData}

@@ -4,7 +4,6 @@ import { useParams } from "react-router-dom";
 import { AppDispatch, RootState } from "../redux/store";
 import { getAllHistoricalData, getSingleData } from "../redux/GlobalSlice";
 import Loader from "./Loader";
-import axios from "axios";
 import LineCharts from "../components/LineCharts";
 
 const CoinDetails = () => {
@@ -23,10 +22,10 @@ const CoinDetails = () => {
     }
   }, [coinId, dispatch, currencySymbol.name]);
 
-console.log(singleData);
+  console.log(singleData);
 
   return (
-    <section>
+    <section className="coin-details-section">
       {loading ? (
         <Loader />
       ) : (
@@ -43,14 +42,46 @@ console.log(singleData);
             <div className="coin-chart">
               <LineCharts />
             </div>
-            <div className="coin-end">
+            <div className="coin-info">
               <ul>
                 <li>Crypto Market Rank</li>
-                <li>{singleData?.market_data.market_cap_rank}</li>
+                <li>{singleData?.market_data?.market_cap_rank || "N/A"}</li>
               </ul>
               <ul>
                 <li>Current Price</li>
-                {/* <li>{currencySymbol.symbol}{singleData?.market_data.current_price}</li> */}
+                <li>
+                  {currencySymbol.symbol}
+                  {singleData?.market_data?.current_price[
+                    currencySymbol.name.toLowerCase()
+                  ].toLocaleString() || "N/A"}
+                </li>
+              </ul>
+              <ul>
+                <li>Market cap</li>
+                <li>
+                  {currencySymbol.symbol}
+                  {singleData?.market_data?.market_cap[
+                    currencySymbol.name.toLowerCase()
+                  ].toLocaleString() || "N/A"}
+                </li>
+              </ul>
+              <ul>
+                <li>24 Hour high</li>
+                <li>
+                  {currencySymbol.symbol}
+                  {singleData?.market_data?.high_24h[
+                    currencySymbol.name.toLowerCase()
+                  ].toLocaleString() || "N/A"}
+                </li>
+              </ul>
+              <ul>
+                <li>24 Hour low</li>
+                <li>
+                  {currencySymbol.symbol}
+                  {singleData?.market_data?.low_24h[
+                    currencySymbol.name.toLowerCase()
+                  ].toLocaleString() || "N/A"}
+                </li>
               </ul>
             </div>
           </div>
