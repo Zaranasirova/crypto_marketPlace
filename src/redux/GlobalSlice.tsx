@@ -36,6 +36,9 @@ export interface CryptoHistoricalData {
   prices: [number, number][];
 }
 
+
+
+
 export interface GlobalState {
   cryptoData: CryptoItem[]; //umumi data statei
   selectedValue: string; //value deyeri saxlayan state
@@ -45,7 +48,8 @@ export interface GlobalState {
   displayCoinData: CryptoItem[]; //filterolunmuş datani və umumi datani saxlamaq ucun olan arrayi saxlayan state
   singleData: CryptoSingleItem | null;
   loading: boolean;
-  historialData: CryptoHistoricalData | null;
+  historicalData: CryptoHistoricalData | null;
+ 
 }
 
 const initialState: GlobalState = {
@@ -57,7 +61,8 @@ const initialState: GlobalState = {
   displayCoinData: [],
   singleData: null,
   loading: false,
-  historialData: null,
+  historicalData: null,
+ 
 };
 
 const getCurrencySymbol = (currency: string) => {
@@ -138,11 +143,11 @@ export const getAllHistoricalData = createAsyncThunk(
     currencySymbol: string;
   }) => {
     const options = {
-      method: "GET",
+      method: 'GET',
       headers: {
-        accept: "application/json",
-        "x-cg-demo-api-key": "	CG-ZbRsxMJUHZ8aMJXtTxPTNTa8",
-      },
+        accept: 'application/json',
+        'x-cg-demo-api-key': '	CG-ZbRsxMJUHZ8aMJXtTxPTNTa8'
+      }
     };
     const historicialDataResponse = await axios.get(
       `https://api.coingecko.com/api/v3/coins/${coinId}/market_chart?vs_currency=${currencySymbol}&days=10&interval=daily`,
@@ -185,7 +190,7 @@ export const globalSlice = createSlice({
     });
 
     builder.addCase(getAllHistoricalData.fulfilled, (state, action) => {
-      state.historialData = action.payload;
+      state.historicalData = action.payload;
     });
 
     builder.addCase(getSingleData.pending, (state) => {

@@ -5,11 +5,12 @@ import { AppDispatch, RootState } from "../redux/store";
 import { getAllHistoricalData, getSingleData } from "../redux/GlobalSlice";
 import Loader from "./Loader";
 import axios from "axios";
+import LineCharts from "../components/LineCharts";
 
 const CoinDetails = () => {
   const { coinId } = useParams<{ coinId: string }>();
   const dispatch = useDispatch<AppDispatch>();
-  const { singleData, currencySymbol, loading, historialData } = useSelector(
+  const { singleData, currencySymbol, loading } = useSelector(
     (state: RootState) => state.global
   );
 
@@ -22,10 +23,7 @@ const CoinDetails = () => {
     }
   }, [coinId, dispatch, currencySymbol.name]);
 
-  const price =
-    singleData?.market_data?.current_price?.[currencySymbol.name.toLowerCase()];
-
-  
+console.log(singleData);
 
   return (
     <section>
@@ -41,7 +39,19 @@ const CoinDetails = () => {
               <p>
                 {singleData?.name} ({singleData?.symbol?.toUpperCase()})
               </p>
-             
+            </div>
+            <div className="coin-chart">
+              <LineCharts />
+            </div>
+            <div className="coin-end">
+              <ul>
+                <li>Crypto Market Rank</li>
+                <li>{singleData?.market_data.market_cap_rank}</li>
+              </ul>
+              <ul>
+                <li>Current Price</li>
+                {/* <li>{currencySymbol.symbol}{singleData?.market_data.current_price}</li> */}
+              </ul>
             </div>
           </div>
         </div>
