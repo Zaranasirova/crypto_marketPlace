@@ -22,11 +22,19 @@
         }
       }
       .coin-info {
-        width: 50%;
+        width: 70%;
         margin: 50px auto;
         display: flex;
         flex-direction: column;
         gap: 10px;
+        @media(max-width:768px){
+        width: 80%;
+
+        }
+        @media(max-width:400px){
+          width: 90%;
+  
+          }
         ul {
           display: flex;
           justify-content: space-between;
@@ -34,6 +42,10 @@
           border-bottom: 1px solid #5f5d5f;
           list-style: none;
           color: #ddd;
+          @media(max-width:400px){
+           font-size: 14px;
+    
+            }
           li {
             &:last-child {
               font-weight: 500;

@@ -79,7 +79,7 @@ const Home = () => {
             <li>Coins</li>
             <li>Price</li>
             <li style={{ textAlign: "center" }}>24H Change</li>
-            <li style={{ textAlign: "right" }}>Market Cap</li>
+            <li style={{ textAlign: "right" }} className="market-cap">Market Cap</li>
           </ul>
           {displayCoinData.slice(0, 30).map((item) => (
             <Link to={`/coin/${item.id}`} key={item.id}>
@@ -102,7 +102,7 @@ const Home = () => {
                 >
                   {Math.floor(item.price_change_percentage_24h * 100) / 100}
                 </li>
-                <li style={{ textAlign: "end" }}>
+                <li style={{ textAlign: "end" }} className="market-cap">
                   {currencySymbol.symbol}
                   {item.market_cap.toLocaleString()}
                 </li>
