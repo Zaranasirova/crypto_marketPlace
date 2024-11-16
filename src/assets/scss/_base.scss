@@ -10,6 +10,12 @@
 .container {
   width: 80%;
   margin: 0 auto;
+  @media(max-width:510px){
+    width: 90%;
+  }
+  @media(max-width:400px){
+    width: 96%;
+  }
 }
 .app {
   background-image: linear-gradient(#0b004e, #1d152f, #002834);
